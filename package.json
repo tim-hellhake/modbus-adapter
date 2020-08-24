@@ -1,7 +1,7 @@
 {
   "name": "modbus-adapter",
   "display_name": "Modbus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connect your Modbus devices",
   "main": "lib/index.js",
   "scripts": {
