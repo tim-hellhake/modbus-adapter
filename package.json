@@ -21,18 +21,9 @@
   "files": [
     "LICENSE",
     "SHA256SUMS",
-    "lib/BrightnessProperty.js",
-    "lib/ColorLightBulb.js",
-    "lib/ColorProperty.js",
-    "lib/ColorTemperatureProperty.js",
-    "lib/DimmableLightBulb.js",
     "lib/index.js",
-    "lib/LightBulb.js",
-    "lib/OnOffProperty.js",
-    "lib/SmartPlug.js",
     "lib/modbus-adapter.js",
-    "lib/ModbusDevice.js",
-    "lib/WhiteSpectrumLightBulb.js",
+    "lib/modbus-device.js",
     "manifest.json"
   ],
   "dependencies": {
