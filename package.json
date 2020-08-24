@@ -1,0 +1,46 @@
+{
+  "name": "modbus-adapter",
+  "display_name": "Modbus",
+  "version": "0.1.0",
+  "description": "Connect your Modbus devices",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node generate-config-interfaces.js && tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-hellhake/modbus-adapter.git"
+  },
+  "author": "Tim Hellhake",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/tim-hellhake/modbus-adapter/issues"
+  },
+  "homepage": "https://github.com/tim-hellhake/modbus-adapter#readme",
+  "files": [
+    "LICENSE",
+    "SHA256SUMS",
+    "lib/BrightnessProperty.js",
+    "lib/ColorLightBulb.js",
+    "lib/ColorProperty.js",
+    "lib/ColorTemperatureProperty.js",
+    "lib/DimmableLightBulb.js",
+    "lib/index.js",
+    "lib/LightBulb.js",
+    "lib/OnOffProperty.js",
+    "lib/SmartPlug.js",
+    "lib/modbus-adapter.js",
+    "lib/ModbusDevice.js",
+    "lib/WhiteSpectrumLightBulb.js",
+    "manifest.json"
+  ],
+  "dependencies": {
+    "modbus-serial": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.23",
+    "json-schema-to-typescript": "^9.1.1",
+    "typescript": "^3.9.7"
+  }
+}
