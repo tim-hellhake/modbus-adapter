@@ -124,6 +124,111 @@
               }
             }
           }
+        },
+        "tcpAdapter": {
+          "type": "array",
+          "title": "List of TCP adapters",
+          "items": {
+            "type": "object",
+            "title": "TCP adapter",
+            "required": [
+              "host",
+              "port",
+              "pollInterval"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "The ID of the adapter (will be generated for you)",
+                "readOnly": true
+              },
+              "host": {
+                "type": "string",
+                "title": "The hostname or IP address of the adapter"
+              },
+              "port": {
+                "type": "integer",
+                "title": "The port of the adapter  (default is 502)"
+              },
+              "pollInterval": {
+                "type": "integer",
+                "title": "The poll interval in seconds"
+              },
+              "devices": {
+                "type": "array",
+                "title": "List of devices",
+                "items": {
+                  "type": "object",
+                  "title": "TCP device",
+                  "required": [
+                    "name",
+                    "address"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "title": "The ID of the device (will be generated for you)",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "The name of the device"
+                    },
+                    "address": {
+                      "type": "string",
+                      "pattern": "^[a-fA-F0-9]{1,4}$",
+                      "title": "The address of the device (hex)"
+                    },
+                    "registers": {
+                      "type": "array",
+                      "title": "List of registers",
+                      "items": {
+                        "type": "object",
+                        "title": "Modbus register",
+                        "required": [
+                          "name",
+                          "address",
+                          "type",
+                          "encoding"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "The ID of the register (will be generated for you)",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "The name of the resulting property"
+                          },
+                          "address": {
+                            "type": "string",
+                            "pattern": "^[a-fA-F0-9]{1,4}$",
+                            "title": "The address of the register (hex)"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "The type of the register (function name)",
+                            "enum": [
+                              "Input"
+                            ]
+                          },
+                          "encoding": {
+                            "type": "string",
+                            "title": "The encoding of the value",
+                            "enum": [
+                              "Int16",
+                              "Float32"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

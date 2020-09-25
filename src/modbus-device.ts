@@ -10,12 +10,12 @@ import ModbusRTU from "modbus-serial";
 
 import { Adapter, Device, Property } from 'gateway-addon';
 
-import { RTUDevice, TheEncodingOfTheValue } from './config';
+import { RTUDevice, TCPDevice, TheEncodingOfTheValue } from './config';
 
 export class ModbusDevice extends Device {
     private propertyByAddress: { [address: string]: Property } = {};
 
-    constructor(adapter: Adapter, private client: ModbusRTU, private device: RTUDevice) {
+    constructor(adapter: Adapter, private client: ModbusRTU, private device: RTUDevice | TCPDevice) {
         super(adapter, device.id as string);
         this['@context'] = 'https://iot.mozilla.org/schemas/';
         this['@type'] = [];

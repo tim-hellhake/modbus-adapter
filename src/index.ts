@@ -10,9 +10,11 @@ import { randomBytes } from 'crypto';
 
 import { Database } from 'gateway-addon';
 
-import { Config } from './config';
+import { Config, RTUAdapter, TCPAdapter } from './config';
 
-import { ModbusAdapter } from './modbus-adapter';
+import { ModbusSerialAdapter } from './modbus-serial-adapter';
+
+import { ModbusTcpAdapter } from './modbus-tcp-adapter';
 
 export = (addonManager: any, manifest: any) => {
     load(addonManager, manifest);
@@ -24,45 +26,67 @@ async function load(addonManager: any, manifest: any) {
     const config = await db.loadConfig() as Config;
 
     const {
-        rtuAdapter
+        rtuAdapter,
+        tcpAdapter
     } = config;
 
     if (rtuAdapter) {
-        for (const adapter of rtuAdapter) {
-            if (!adapter.id) {
-                adapter.id = `${randomBytes(16).toString('hex')}`;
-            }
+        generateIds(rtuAdapter);
 
+        for (const adapter of rtuAdapter) {
             const {
-                pollInterval,
-                devices
+                pollInterval
             } = adapter;
 
-            if (devices) {
-                for (const device of devices) {
-                    if (!device.id) {
-                        device.id = `${randomBytes(16).toString('hex')}`;
-                    }
+            new ModbusSerialAdapter(addonManager, manifest.id, adapter, pollInterval);
+        }
+    }
 
-                    const {
-                        registers
-                    } = device;
+    if (tcpAdapter) {
+        generateIds(tcpAdapter);
 
-                    if (registers) {
-                        for (const register of registers) {
-                            if (!register.id) {
-                                register.id = `${randomBytes(16).toString('hex')}`;
-                            }
-                        }
-                    }
-                }
-            }
+        for (const adapter of tcpAdapter) {
+            const {
+                pollInterval
+            } = adapter;
 
-            new ModbusAdapter(addonManager, adapter, pollInterval);
+            new ModbusTcpAdapter(addonManager, manifest.id, adapter, pollInterval);
         }
     }
 
     await db.saveConfig(config);
 
     return config;
+}
+
+function generateIds(adapters: (RTUAdapter | TCPAdapter)[]) {
+    for (const adapter of adapters) {
+        if (!adapter.id) {
+            adapter.id = `${randomBytes(16).toString('hex')}`;
+        }
+
+        const {
+            devices
+        } = adapter;
+
+        if (devices) {
+            for (const device of devices) {
+                if (!device.id) {
+                    device.id = `${randomBytes(16).toString('hex')}`;
+                }
+
+                const {
+                    registers
+                } = device;
+
+                if (registers) {
+                    for (const register of registers) {
+                        if (!register.id) {
+                            register.id = `${randomBytes(16).toString('hex')}`;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
