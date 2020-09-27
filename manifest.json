@@ -74,6 +74,42 @@
                       "pattern": "^[a-fA-F0-9]{1,4}$",
                       "title": "The address of the device (hex)"
                     },
+                    "bits": {
+                      "type": "array",
+                      "title": "List of bits",
+                      "items": {
+                        "type": "object",
+                        "title": "Modbus bit",
+                        "required": [
+                          "name",
+                          "address",
+                          "type"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "The ID of the bit (will be generated for you)",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "The name of the resulting property"
+                          },
+                          "address": {
+                            "type": "string",
+                            "pattern": "^[a-fA-F0-9]{1,4}$",
+                            "title": "The address of the bit (hex)"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "The type of the bit (function name)",
+                            "enum": [
+                              "DiscreteInput"
+                            ]
+                          }
+                        }
+                      }
+                    },
                     "registers": {
                       "type": "array",
                       "title": "List of registers",
@@ -178,6 +214,42 @@
                       "type": "string",
                       "pattern": "^[a-fA-F0-9]{1,4}$",
                       "title": "The address of the device (hex)"
+                    },
+                    "bits": {
+                      "type": "array",
+                      "title": "List of bits",
+                      "items": {
+                        "type": "object",
+                        "title": "Modbus bit",
+                        "required": [
+                          "name",
+                          "address",
+                          "type"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "The ID of the bit (will be generated for you)",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "The name of the resulting property"
+                          },
+                          "address": {
+                            "type": "string",
+                            "pattern": "^[a-fA-F0-9]{1,4}$",
+                            "title": "The address of the bit (hex)"
+                          },
+                          "type": {
+                            "type": "string",
+                            "title": "The type of the bit (function name)",
+                            "enum": [
+                              "DiscreteInput"
+                            ]
+                          }
+                        }
+                      }
                     },
                     "registers": {
                       "type": "array",

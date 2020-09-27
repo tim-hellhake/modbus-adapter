@@ -21,7 +21,21 @@ export class ModbusDevice extends Device {
         this['@type'] = [];
         this.name = device.name;
 
-        const { registers } = device;
+        const { bits, registers } = device;
+
+        if (bits) {
+            for (const bit of bits) {
+                const { name, address } = bit;
+
+                console.log(`Creating property for ${name} at ${address}`);
+
+                this.addProperty(address, new Property(this, `${address}`, {
+                    type: 'boolean',
+                    readOnly: true,
+                    title: name
+                }));
+            }
+        }
 
         if (registers) {
             for (const register of registers) {
@@ -44,7 +58,33 @@ export class ModbusDevice extends Device {
     }
 
     public async poll() {
-        const { registers } = this.device;
+        const { bits, registers } = this.device;
+
+        if (bits) {
+            for (const bit of bits) {
+                const { address } = bit;
+                const property = this.propertyByAddress[address];
+
+                if (property) {
+                    const deviceAddressNumber = parseInt(`0x${this.device.address}`);
+                    this.client.setID(deviceAddressNumber);
+
+                    const addressNumber = parseInt(`0x${address}`);
+                    const { data } = await this.client.readDiscreteInputs(addressNumber, 1);
+
+                    if (data.length == 0) {
+                        console.log('Response did not contain any bits');
+                        continue;
+                    }
+
+                    if (data.length != 1) {
+                        console.log(`Expected 1 bit but got ${data.length}}`);
+                    }
+
+                    property.setCachedValueAndNotify(data[0]);
+                }
+            }
+        }
 
         if (registers) {
             for (const register of registers) {
