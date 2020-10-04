@@ -6,11 +6,13 @@
 
 'use strict';
 
-import ModbusRTU from "modbus-serial";
+import ModbusRTU from 'modbus-serial';
 
 import { Adapter, Device, Property } from 'gateway-addon';
 
 import { RTUDevice, TCPDevice, TheEncodingOfTheValue } from './config';
+import { WritableProperty } from './writable-property';
+import { ReadCoilResult } from 'modbus-serial/ModbusRTU';
 
 export class ModbusDevice extends Device {
     private propertyByAddress: { [address: string]: Property } = {};
@@ -25,15 +27,27 @@ export class ModbusDevice extends Device {
 
         if (bits) {
             for (const bit of bits) {
-                const { name, address } = bit;
+                const { name, address, type } = bit;
 
                 console.log(`Creating property for ${name} at ${address}`);
 
-                this.addProperty(address, new Property(this, `${address}`, {
-                    type: 'boolean',
-                    readOnly: true,
-                    title: name
-                }));
+                switch (type) {
+                    case 'DiscreteInput':
+                        this.addProperty(address, new Property(this, `${address}`, {
+                            type: 'boolean',
+                            readOnly: true,
+                            title: name
+                        }));
+                        break;
+                    case 'Coil':
+                        const addressNumber = parseInt(`0x${address}`);
+
+                        this.addProperty(address, new WritableProperty(this, `${address}`, {
+                            type: 'boolean',
+                            title: name
+                        }, value => client.writeCoil(addressNumber, value)));
+                        break;
+                }
             }
         }
 
@@ -62,7 +76,7 @@ export class ModbusDevice extends Device {
 
         if (bits) {
             for (const bit of bits) {
-                const { address } = bit;
+                const { address, type } = bit;
                 const property = this.propertyByAddress[address];
 
                 if (property) {
@@ -70,7 +84,18 @@ export class ModbusDevice extends Device {
                     this.client.setID(deviceAddressNumber);
 
                     const addressNumber = parseInt(`0x${address}`);
-                    const { data } = await this.client.readDiscreteInputs(addressNumber, 1);
+                    let result: ReadCoilResult;
+
+                    switch (type) {
+                        case 'DiscreteInput':
+                            result = await this.client.readDiscreteInputs(addressNumber, 1);
+                            break;
+                        case 'Coil':
+                            result = await this.client.readCoils(addressNumber, 1);
+                            break;
+                    }
+
+                    const { data } = result;
 
                     if (data.length == 0) {
                         console.log('Response did not contain any bits');

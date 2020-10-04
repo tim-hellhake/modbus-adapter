@@ -26,6 +26,7 @@
     "lib/modbus-device.js",
     "lib/modbus-serial-adapter.js",
     "lib/modbus-tcp-adapter.js",
+    "lib/writable-property.js",
     "manifest.json"
   ],
   "dependencies": {
