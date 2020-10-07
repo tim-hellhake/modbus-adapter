@@ -142,7 +142,8 @@
                             "type": "string",
                             "title": "The type of the register (function name)",
                             "enum": [
-                              "Input"
+                              "Input",
+                              "Holding"
                             ]
                           },
                           "encoding": {
@@ -284,7 +285,8 @@
                             "type": "string",
                             "title": "The type of the register (function name)",
                             "enum": [
-                              "Input"
+                              "Input",
+                              "Holding"
                             ]
                           },
                           "encoding": {

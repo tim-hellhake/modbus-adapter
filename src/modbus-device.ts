@@ -13,6 +13,7 @@ import { Adapter, Device, Property } from 'gateway-addon';
 import { RTUDevice, TCPDevice, TheEncodingOfTheValue } from './config';
 import { WritableProperty } from './writable-property';
 import { ReadCoilResult } from 'modbus-serial/ModbusRTU';
+import { ReadRegisterResult } from 'modbus-serial/ModbusRTU';
 
 export class ModbusDevice extends Device {
     private propertyByAddress: { [address: string]: Property } = {};
@@ -53,15 +54,27 @@ export class ModbusDevice extends Device {
 
         if (registers) {
             for (const register of registers) {
-                const { name, address } = register;
+                const { name, address, type } = register;
 
                 console.log(`Creating property for ${name} at ${address}`);
 
-                this.addProperty(address, new Property(this, `${address}`, {
-                    type: 'number',
-                    readOnly: true,
-                    title: name
-                }));
+                switch (type) {
+                    case 'Input':
+                        this.addProperty(address, new Property(this, `${address}`, {
+                            type: 'number',
+                            readOnly: true,
+                            title: name
+                        }));
+                        break;
+                    case 'Holding':
+                        const addressNumber = parseInt(`0x${address}`);
+
+                        this.addProperty(address, new WritableProperty(this, `${address}`, {
+                            type: 'number',
+                            title: name
+                        }, value => client.writeRegister(addressNumber, value)));
+                        break;
+                }
             }
         }
     }
@@ -113,7 +126,7 @@ export class ModbusDevice extends Device {
 
         if (registers) {
             for (const register of registers) {
-                const { address, encoding } = register;
+                const { address, encoding, type } = register;
                 const property = this.propertyByAddress[address];
 
                 if (property) {
@@ -123,8 +136,19 @@ export class ModbusDevice extends Device {
                     this.client.setID(deviceAddressNumber);
 
                     const addressNumber = parseInt(`0x${address}`);
-                    const { data } = await this.client.readInputRegisters(addressNumber, count);
 
+                    let result: ReadRegisterResult;
+
+                    switch (type) {
+                        case 'Input':
+                            result = await this.client.readInputRegisters(addressNumber, count);
+                            break;
+                        case 'Holding':
+                            result = await this.client.readHoldingRegisters(addressNumber, count);
+                            break;
+                    }
+
+                    const { data } = result;
                     const value = this.decode(data, encoding);
                     property.setCachedValueAndNotify(value);
                 }
