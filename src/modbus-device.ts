@@ -150,7 +150,7 @@ export class ModbusDevice extends Device {
 
         if (registers) {
             for (const register of registers) {
-                const { address, encoding, type } = register;
+                const { address, encoding, type, divisor } = register;
                 const property = this.propertyByAddress[address];
 
                 if (property) {
@@ -177,7 +177,7 @@ export class ModbusDevice extends Device {
                     console.log(`Result ${addressNumber} ${JSON.stringify(result)}`)
 
                     const { data } = result;
-                    const value = this.decode(data, encoding);
+                    const value = this.decode(data, encoding) / (divisor || 1);
                     property.setCachedValueAndNotify(value);
                 }
             }

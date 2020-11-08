@@ -233,6 +233,10 @@
                               "Int16",
                               "Float32"
                             ]
+                          },
+                          "divisor": {
+                            "type": "number",
+                            "title": "A divisor to compensate for device side multiplicators (Example: 10 if the device reports 313°C instead of 31,1°C"
                           }
                         }
                       }
@@ -456,6 +460,10 @@
                               "Int16",
                               "Float32"
                             ]
+                          },
+                          "divisor": {
+                            "type": "number",
+                            "title": "A divisor to compensate for device side multiplicators (Example: 10 if the device reports 313°C instead of 31,1°C"
                           }
                         }
                       }
