@@ -69,6 +69,39 @@
                       "type": "string",
                       "title": "The name of the device"
                     },
+                    "capabilities": {
+                      "type": "array",
+                      "title": "The list of capabilities of the device",
+                      "items": {
+                        "type": "string",
+                        "title": "One of the capabilities of the device (https://iot.mozilla.org/schemas)",
+                        "enum": [
+                          "Alarm",
+                          "AirQualitySensor",
+                          "BarometricPressureSensor",
+                          "BinarySensor",
+                          "Camera",
+                          "ColorControl",
+                          "ColorSensor",
+                          "DoorSensor",
+                          "EnergyMonitor",
+                          "HumiditySensor",
+                          "LeakSensor",
+                          "Light",
+                          "Lock",
+                          "MotionSensor",
+                          "MultiLevelSensor",
+                          "MultiLevelSwitch",
+                          "OnOffSwitch",
+                          "PushButton",
+                          "SmartPlug",
+                          "SmokeSensor",
+                          "TemperatureSensor",
+                          "Thermostat",
+                          "VideoCamera"
+                        ]
+                      }
+                    },
                     "address": {
                       "type": "string",
                       "pattern": "^[a-fA-F0-9]{1,4}$",
@@ -132,6 +165,53 @@
                           "name": {
                             "type": "string",
                             "title": "The name of the resulting property"
+                          },
+                          "propertyType": {
+                            "type": "string",
+                            "title": "The type of the property (https://iot.mozilla.org/schemas/#capabilities)",
+                            "enum": [
+                              "AlarmProperty",
+                              "BarometricPressureProperty",
+                              "BooleanProperty",
+                              "BrightnessProperty",
+                              "ColorModeProperty",
+                              "ColorProperty",
+                              "ColorTemperatureProperty",
+                              "ConcentrationProperty",
+                              "CurrentProperty",
+                              "DensityProperty",
+                              "FrequencyProperty",
+                              "HeatingCoolingProperty",
+                              "HumidityProperty",
+                              "ImageProperty",
+                              "InstantaneousPowerFactorProperty",
+                              "InstantaneousPowerProperty",
+                              "LeakProperty",
+                              "LevelProperty",
+                              "LockedProperty",
+                              "MotionProperty",
+                              "OnOffProperty",
+                              "OpenProperty",
+                              "PushedProperty",
+                              "SmokeProperty",
+                              "TargetTemperatureProperty",
+                              "TemperatureProperty",
+                              "ThermostatModeProperty",
+                              "VideoProperty",
+                              "VoltageProperty"
+                            ]
+                          },
+                          "unit": {
+                            "type": "string",
+                            "title": "The SI unit of the value"
+                          },
+                          "minimum": {
+                            "type": "number",
+                            "title": "The minimum value"
+                          },
+                          "maximum": {
+                            "type": "number",
+                            "title": "The maximum value"
                           },
                           "address": {
                             "type": "string",
@@ -212,6 +292,39 @@
                       "type": "string",
                       "title": "The name of the device"
                     },
+                    "capabilities": {
+                      "type": "array",
+                      "title": "The list of capabilities of the device",
+                      "items": {
+                        "type": "string",
+                        "title": "One of the capabilities of the device (https://iot.mozilla.org/schemas)",
+                        "enum": [
+                          "Alarm",
+                          "AirQualitySensor",
+                          "BarometricPressureSensor",
+                          "BinarySensor",
+                          "Camera",
+                          "ColorControl",
+                          "ColorSensor",
+                          "DoorSensor",
+                          "EnergyMonitor",
+                          "HumiditySensor",
+                          "LeakSensor",
+                          "Light",
+                          "Lock",
+                          "MotionSensor",
+                          "MultiLevelSensor",
+                          "MultiLevelSwitch",
+                          "OnOffSwitch",
+                          "PushButton",
+                          "SmartPlug",
+                          "SmokeSensor",
+                          "TemperatureSensor",
+                          "Thermostat",
+                          "VideoCamera"
+                        ]
+                      }
+                    },
                     "address": {
                       "type": "string",
                       "pattern": "^[a-fA-F0-9]{1,4}$",
@@ -275,6 +388,53 @@
                           "name": {
                             "type": "string",
                             "title": "The name of the resulting property"
+                          },
+                          "propertyType": {
+                            "type": "string",
+                            "title": "The type of the property (https://iot.mozilla.org/schemas/#capabilities)",
+                            "enum": [
+                              "AlarmProperty",
+                              "BarometricPressureProperty",
+                              "BooleanProperty",
+                              "BrightnessProperty",
+                              "ColorModeProperty",
+                              "ColorProperty",
+                              "ColorTemperatureProperty",
+                              "ConcentrationProperty",
+                              "CurrentProperty",
+                              "DensityProperty",
+                              "FrequencyProperty",
+                              "HeatingCoolingProperty",
+                              "HumidityProperty",
+                              "ImageProperty",
+                              "InstantaneousPowerFactorProperty",
+                              "InstantaneousPowerProperty",
+                              "LeakProperty",
+                              "LevelProperty",
+                              "LockedProperty",
+                              "MotionProperty",
+                              "OnOffProperty",
+                              "OpenProperty",
+                              "PushedProperty",
+                              "SmokeProperty",
+                              "TargetTemperatureProperty",
+                              "TemperatureProperty",
+                              "ThermostatModeProperty",
+                              "VideoProperty",
+                              "VoltageProperty"
+                            ]
+                          },
+                          "unit": {
+                            "type": "string",
+                            "title": "The SI unit of the value"
+                          },
+                          "minimum": {
+                            "type": "number",
+                            "title": "The minimum value"
+                          },
+                          "maximum": {
+                            "type": "number",
+                            "title": "The maximum value"
                           },
                           "address": {
                             "type": "string",

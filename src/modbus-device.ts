@@ -24,7 +24,11 @@ export class ModbusDevice extends Device {
         this['@type'] = [];
         this.name = device.name;
 
-        const { bits, registers } = device;
+        const { bits, registers, capabilities } = device;
+
+        if (capabilities) {
+            this['@type'] = capabilities;
+        }
 
         if (bits) {
             for (const bit of bits) {
@@ -54,7 +58,25 @@ export class ModbusDevice extends Device {
 
         if (registers) {
             for (const register of registers) {
-                const { name, address, type } = register;
+                const { name, address, type, propertyType, unit, minimum, maximum } = register;
+
+                const additionalProperties: Record<string, unknown> = {};
+
+                if (propertyType) {
+                    additionalProperties['@type'] = propertyType;
+                }
+
+                if (unit) {
+                    additionalProperties.unit = unit;
+                }
+
+                if (minimum) {
+                    additionalProperties.minimum = minimum;
+                }
+
+                if (maximum) {
+                    additionalProperties.maximum = maximum;
+                }
 
                 console.log(`Creating property for ${name} at ${address}`);
 
@@ -63,7 +85,8 @@ export class ModbusDevice extends Device {
                         this.addProperty(address, new Property(this, `${address}`, {
                             type: 'number',
                             readOnly: true,
-                            title: name
+                            title: name,
+                            ...additionalProperties
                         }));
                         break;
                     case 'Holding':
@@ -71,7 +94,8 @@ export class ModbusDevice extends Device {
 
                         this.addProperty(address, new WritableProperty(this, `${address}`, {
                             type: 'number',
-                            title: name
+                            title: name,
+                            ...additionalProperties
                         }, value => client.writeRegister(addressNumber, value)));
                         break;
                 }
@@ -139,6 +163,8 @@ export class ModbusDevice extends Device {
 
                     let result: ReadRegisterResult;
 
+                    console.log(`Reading ${type} ${addressNumber}`)
+
                     switch (type) {
                         case 'Input':
                             result = await this.client.readInputRegisters(addressNumber, count);
@@ -147,6 +173,8 @@ export class ModbusDevice extends Device {
                             result = await this.client.readHoldingRegisters(addressNumber, count);
                             break;
                     }
+
+                    console.log(`Result ${addressNumber} ${JSON.stringify(result)}`)
 
                     const { data } = result;
                     const value = this.decode(data, encoding);
