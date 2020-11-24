@@ -231,6 +231,8 @@
                             "title": "The encoding of the value",
                             "enum": [
                               "Int16",
+                              "UInt32",
+                              "Int32",
                               "Float32"
                             ]
                           },
@@ -458,6 +460,8 @@
                             "title": "The encoding of the value",
                             "enum": [
                               "Int16",
+                              "UInt32",
+                              "Int32",
                               "Float32"
                             ]
                           },

@@ -58,7 +58,7 @@ export class ModbusDevice extends Device {
 
         if (registers) {
             for (const register of registers) {
-                const { name, address, type, propertyType, unit, minimum, maximum } = register;
+                const { name, address, type, propertyType, unit, minimum, maximum, encoding } = register;
 
                 const additionalProperties: Record<string, unknown> = {};
 
@@ -83,7 +83,7 @@ export class ModbusDevice extends Device {
                 switch (type) {
                     case 'Input':
                         this.addProperty(address, new Property(this, `${address}`, {
-                            type: 'number',
+                            type: this.getPropertyType(encoding),
                             readOnly: true,
                             title: name,
                             ...additionalProperties
@@ -93,7 +93,7 @@ export class ModbusDevice extends Device {
                         const addressNumber = parseInt(`0x${address}`);
 
                         this.addProperty(address, new WritableProperty(this, `${address}`, {
-                            type: 'number',
+                            type: this.getPropertyType(encoding),
                             title: name,
                             ...additionalProperties
                         }, value => client.writeRegister(addressNumber, value)));
@@ -184,10 +184,26 @@ export class ModbusDevice extends Device {
         }
     }
 
+    private getPropertyType(encoding: TheEncodingOfTheValue) {
+        switch (encoding) {
+            case 'Int16':
+            case 'UInt32':
+            case 'Int32':
+                return 'integer';
+            case 'Float32':
+                return 'number';
+        }
+
+        return 'number';
+    }
+
     private getRegisterCountFromEncoding(encoding: TheEncodingOfTheValue) {
         switch (encoding) {
             case 'Int16':
                 return 1;
+            case 'UInt32':
+            case 'Int32':
+                return 2;
             case 'Float32':
                 return 2;
         }
@@ -195,23 +211,32 @@ export class ModbusDevice extends Device {
         return 1;
     }
 
+    private static read32BitBuffer(array: number[]) {
+        if (array.length < 2) {
+            throw new Error("2 registers are needed for 32 bit values");
+        }
+        const [h, l] = array;
+
+        const bytes = [
+            h >> 8,
+            h & 0xFF,
+            l >> 8,
+            l & 0xFF,
+        ];
+
+        return Buffer.from(bytes);
+    }
+
     private decode(array: number[], encoding: TheEncodingOfTheValue) {
         switch (encoding) {
             case 'Int16':
                 return array[0];
+            case 'UInt32':
+                return ModbusDevice.read32BitBuffer(array).readUInt32BE(0);
+            case 'Int32':
+                return ModbusDevice.read32BitBuffer(array).readInt32BE(0);
             case 'Float32':
-                const [h, l] = array;
-
-                const bytes = [
-                    h >> 8,
-                    h & 0xFF,
-                    l >> 8,
-                    l & 0xFF,
-                ];
-
-                const buff = Buffer.from(bytes);
-
-                return buff.readFloatBE(0);
+                return ModbusDevice.read32BitBuffer(array).readFloatBE(0);
         }
 
         return 1;
